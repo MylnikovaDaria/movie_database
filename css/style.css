@@ -183,6 +183,7 @@ body {
   border: none;
   outline: none;
   background-color: transparent;
+  line-height: 28px;
 }
 
 .header-block__input_search {
