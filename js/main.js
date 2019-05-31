@@ -416,28 +416,32 @@ document.getElementById('submit').onclick = () => {
   let term = document.getElementById("search").value;
   applyCustomStylesAfterSearch();
 
-  class filteredData {
+  class DataFilter {
     constructor(data) {
-      this.data = data
+      this.data = data;
+      this.movieNumber = data.filter(x => x.media_type == "movie");
+      this.tvNumber = data.filter(x => x.media_type == "tv");
+      this.personNumber = data.filter(x => x.media_type == "person");
     }
+  }
+
+  let populateCounters = (dataFilter) => {
+    movieNumber.innerHTML = ` (${dataFilter.movieNumber.length})`;
+    tvNumber.innerHTML = ` (${dataFilter.tvNumber.length})`;
+    personNumber.innerHTML = ` (${dataFilter.personNumber.length})`;
+
   }
 
   axios.get(`https://api.themoviedb.org/3/search/multi?api_key=a4d66e0eba55fbd6378c9d51a9483aa3&query=${term}`)
     .then(response => {
       document.getElementById("filter").style.display = "block";
       let data = response.data.results;
-      let numberOfMovies = data.filter(x => x.media_type == "movie");
-      let numberOfTvShows = data.filter(x => x.media_type == "tv");
-      let numberOfPerson = data.filter(x => x.media_type == "person");
-
-      movieNumber.innerHTML = ` (${numberOfMovies.length})`;
-      tvNumber.innerHTML = ` (${numberOfTvShows.length})`;
-      personNumber.innerHTML = ` (${numberOfPerson.length})`;
-
+      let dataFilter = new DataFilter(data);
+      populateCounters(dataFilter);
 
       resetFilter();
       movie.style.borderBottom = "1px solid green";
-      numberOfMovies.forEach(x => {
+      dataFilter.movieNumber.forEach(x => {
         let blockSearch = new CardsConstructor(cardClassNames, x.poster_path, x.name, x.title, x.vote_average, x.release_date, x.first_air_date, x.overview)
         mainSection.appendChild(blockSearch.outputDiv());
       })
@@ -447,7 +451,7 @@ document.getElementById('submit').onclick = () => {
         resetFilter();
         movie.style.borderBottom = "1px solid green";
         mainSection.innerHTML = '';
-        numberOfMovies.forEach(x => {
+        dataFilter.movieNumber.forEach(x => {
           let blockSearch = new CardsConstructor(cardClassNames, x.poster_path, x.name, x.title, x.vote_average, x.release_date, x.first_air_date, x.overview)
           mainSection.appendChild(blockSearch.outputDiv());
         })
@@ -457,7 +461,7 @@ document.getElementById('submit').onclick = () => {
         resetFilter();
         tv.style.borderBottom = "1px solid green";
         mainSection.innerHTML = '';
-        numberOfTvShows.forEach(x => {
+        dataFilter.tvNumber.forEach(x => {
           let blockSearch = new CardsConstructor(cardClassNames, x.poster_path, x.name, x.title, x.vote_average, x.release_date, x.first_air_date, x.overview)
           mainSection.appendChild(blockSearch.outputDiv());
         })
@@ -467,7 +471,7 @@ document.getElementById('submit').onclick = () => {
         resetFilter();
         person.style.borderBottom = "1px solid green";
         mainSection.innerHTML = '';
-        numberOfPerson.forEach(x => {
+        dataFilter.personNumber.forEach(x => {
           let blockSearch = new PersonCardConstructor(cardClassNames, x.profile_path, x.name, x.popularity, x.known_for)
           mainSection.appendChild(blockSearch.outputDiv());
         })
