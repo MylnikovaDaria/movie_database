@@ -1,3 +1,49 @@
+// Входящие данные
+const monthNames = ["January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December"
+];
+
+const ratedClassNames = {
+  div: "main-section__block",
+  a: "main-section__block__a",
+  img: "main-section__block__img",
+  p: "main-section__block__p",
+  h2: "main-section__h2"
+}
+
+const filterClassNames = {
+  ul: "main-section__ul",
+  li: "main-section__ul__li",
+  a: "main-section__ul__li__a",
+  span: "main-section__ul__li__a_span"
+}
+
+const asideClassNames = {
+  div: "main-aside__block",
+  a: "main-aside__block__a",
+  img: "main-aside__block__img",
+  p: "main-aside__block__p"
+}
+
+const cardClassNames = {
+  div: "main-section__block main-section__block_search_results movie",
+  a: "main-section__block__a main-section__block__a_search_results ",
+  img: "main-section__block__img main-section__block__img_search_results",
+  p: "main-section__block__p main-section__block__p_search_results"
+}
+
+const listClassNames = {
+  div: "main-bottom__block",
+  a: "main-bottom__block__a",
+  img: "main-bottom__block__img"
+}
+
+const aside = document.getElementById("aside");
+const main = document.getElementById('main');
+const mainBlock = document.getElementById('main-block');
+const mainSection = document.getElementById('main-section');
+const mainBottom = document.getElementById('main-bottom');
+
 class StructureConstructor {
   constructor(classNames) {
     this.classNames = classNames;
@@ -71,15 +117,28 @@ class FilterConstructor extends StructureConstructor {
     a.innerHTML = inner;
     return a
   }
-
+  createSpan(inner, id) {
+    let span = document.createElement("span");
+    span.className = this.classNames.span;
+    span.id = id;
+    span.innerHTML = inner;
+    return span
+  }
   outputUl() {
     let outputUl = this.createUl();
+    outputUl.id = "filter";
     let li = this.createLi("");
     let li1 = this.createLi("");
     let li2 = this.createLi("");
     let a = this.createA("Movies", "movie");
     let a1 = this.createA("TV shows", "tv");
     let a2 = this.createA("Person", "person");
+    let span = this.createSpan("", "movie-number");
+    let span1 = this.createSpan("", "tv-number");
+    let span2 = this.createSpan("", "person-number");
+    a.appendChild(span);
+    a1.appendChild(span1);
+    a2.appendChild(span2);
     li.appendChild(a);
     li1.appendChild(a1);
     li2.appendChild(a2);
@@ -234,12 +293,10 @@ class PersonCardConstructor extends StructureConstructor {
   }
   getKnownFor() {
     let arr = this.knownFor;
-    console.log(arr);
     let newArr = [];
     arr.forEach(x => {
       newArr.push((x.title == undefined) ? x.name : x.title);
     })
-    console.log(newArr);
     let inner = newArr.join(" , ")
     return inner;
   }
@@ -286,54 +343,9 @@ let getRandomArrNum = (outputArr, i, arr, arrLength, min) => {
   return outputArr;
 }
 
-// Входящие данные
-const monthNames = ["January", "February", "March", "April", "May", "June",
-  "July", "August", "September", "October", "November", "December"
-];
-
-let ratedClassNames = {
-  div: "main-section__block",
-  a: "main-section__block__a",
-  img: "main-section__block__img",
-  p: "main-section__block__p",
-  h2: "main-section__h2"
-}
-
-let filterClassNames = {
-  ul: "main-section__ul",
-  li: "main-section__ul__li",
-  a: "main-section__ul__li__a"
-}
-
-let asideClassNames = {
-  div: "main-aside__block",
-  a: "main-aside__block__a",
-  img: "main-aside__block__img",
-  p: "main-aside__block__p"
-}
-
-let cardClassNames = {
-  div: "main-section__block main-section__block_search_results movie",
-  a: "main-section__block__a main-section__block__a_search_results ",
-  img: "main-section__block__img main-section__block__img_search_results",
-  p: "main-section__block__p main-section__block__p_search_results"
-}
-
-let listClassNames = {
-  div: "main-bottom__block",
-  a: "main-bottom__block__a",
-  img: "main-bottom__block__img"
-}
-
-let aside = document.getElementById("aside");
-let main = document.getElementById('main');
-let mainBlock = document.getElementById('main-block');
-let mainSection = document.getElementById('main-section');
-let mainBottom = document.getElementById('main-bottom');
 let arrList = [3, 28, 3945, 2469, 932, 3681, 43, 338, 3321, 1131, 3682, 1];
 let randArrList = getRandomArr(arrList, 3, 0);
 let listId;
-
 
 // Запрос на отображение самых рейтинговых тв шоу
 axios.get("https://api.themoviedb.org/3/tv/top_rated?api_key=a4d66e0eba55fbd6378c9d51a9483aa3&language=en-US&page=1")
@@ -379,35 +391,49 @@ let applyCustomStylesAfterSearch = () => {
   main.style.flexDirection = "row-reverse";
 }
 
+let filter = new FilterConstructor(filterClassNames);
+main.appendChild(filter.outputUl());
+
+const movie = document.getElementById("movie");
+const tv = document.getElementById("tv");
+const person = document.getElementById("person");
+
+const movieNumber = document.getElementById("movie-number");
+const tvNumber = document.getElementById("tv-number");
+const personNumber = document.getElementById("person-number");
+
+document.getElementById("filter").style.display = "none";
+
+
+let resetFilter = () => {
+  movie.style.borderBottom = "1px solid transparent";
+  tv.style.borderBottom = "1px solid transparent";
+  person.style.borderBottom = "1px solid transparent";
+}
+
 // Поиск фильмов и tv шоу
 document.getElementById('submit').onclick = () => {
   let term = document.getElementById("search").value;
   applyCustomStylesAfterSearch();
 
-  let filter = new FilterConstructor(filterClassNames);
-  main.appendChild(filter.outputUl());
-
-  let movie = document.getElementById("movie");
-  let tv = document.getElementById("tv");
-  let person = document.getElementById("person");
+  class filteredData {
+    constructor(data) {
+      this.data = data
+    }
+  }
 
   axios.get(`https://api.themoviedb.org/3/search/multi?api_key=a4d66e0eba55fbd6378c9d51a9483aa3&query=${term}`)
     .then(response => {
+      document.getElementById("filter").style.display = "block";
       let data = response.data.results;
       let numberOfMovies = data.filter(x => x.media_type == "movie");
       let numberOfTvShows = data.filter(x => x.media_type == "tv");
       let numberOfPerson = data.filter(x => x.media_type == "person");
 
-      console.log(numberOfPerson);
+      movieNumber.innerHTML = ` (${numberOfMovies.length})`;
+      tvNumber.innerHTML = ` (${numberOfTvShows.length})`;
+      personNumber.innerHTML = ` (${numberOfPerson.length})`;
 
-      movie.insertAdjacentHTML("beforeEnd", `<span class="main-section__ul__li__a_span"> (${numberOfMovies.length})</span>`);
-      tv.insertAdjacentHTML("beforeEnd", `<span class="main-section__ul__li__a_span"> (${numberOfTvShows.length})</span>`);
-      person.insertAdjacentHTML("beforeEnd", `<span class="main-section__ul__li__a_span"> (${numberOfPerson.length})</span>`);
-      let resetFilter = () => {
-        movie.style.borderBottom = "1px solid transparent";
-        tv.style.borderBottom = "1px solid transparent";
-        person.style.borderBottom = "1px solid transparent";
-      }
 
       resetFilter();
       movie.style.borderBottom = "1px solid green";
@@ -444,7 +470,6 @@ document.getElementById('submit').onclick = () => {
         numberOfPerson.forEach(x => {
           let blockSearch = new PersonCardConstructor(cardClassNames, x.profile_path, x.name, x.popularity, x.known_for)
           mainSection.appendChild(blockSearch.outputDiv());
-          console.log(x.known_for)
         })
       }
     })
