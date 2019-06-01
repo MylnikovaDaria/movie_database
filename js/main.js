@@ -1,9 +1,9 @@
-// Входящие данные
-const monthNames = ["January", "February", "March", "April", "May", "June",
+//Enrty data
+const MONTH_NAMES = ["January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December"
 ];
 
-const ratedClassNames = {
+const RATED_CLASSNAMES = {
   div: "main-section__block",
   a: "main-section__block__a",
   img: "main-section__block__img",
@@ -11,39 +11,40 @@ const ratedClassNames = {
   h2: "main-section__h2"
 }
 
-const filterClassNames = {
-  ul: "main-section__ul",
-  li: "main-section__ul__li",
-  a: "main-section__ul__li__a",
-  span: "main-section__ul__li__a_span"
-}
-
-const asideClassNames = {
+const ASIDE_CLASSNAMES = {
   div: "main-aside__block",
   a: "main-aside__block__a",
   img: "main-aside__block__img",
   p: "main-aside__block__p"
 }
 
-const cardClassNames = {
+const CARD_CLASSNAMES = {
   div: "main-section__block main-section__block_search_results movie",
   a: "main-section__block__a main-section__block__a_search_results ",
   img: "main-section__block__img main-section__block__img_search_results",
   p: "main-section__block__p main-section__block__p_search_results"
 }
 
-const listClassNames = {
+const LIST_CLASSNAMES = {
   div: "main-bottom__block",
   a: "main-bottom__block__a",
   img: "main-bottom__block__img"
 }
-
+const arrList = [3, 28, 3945, 2469, 932, 3681, 43, 338, 3321, 1131, 3682, 1];
 const aside = document.getElementById("aside");
 const main = document.getElementById('main');
 const mainBlock = document.getElementById('main-block');
 const mainSection = document.getElementById('main-section');
 const mainBottom = document.getElementById('main-bottom');
+const movie = document.getElementById("movie");
+const search = document.getElementById("search");
+const tv = document.getElementById("tv");
+const person = document.getElementById("person");
+const movieNumber = document.getElementById("movie-number");
+const tvNumber = document.getElementById("tv-number");
+const personNumber = document.getElementById("person-number");
 
+// Abstract class
 class StructureConstructor {
   constructor(classNames) {
     this.classNames = classNames;
@@ -103,53 +104,7 @@ class StructureConstructor {
   }
 }
 
-// Класс для оздание фильтра для обработки результатов поиска
-class FilterConstructor extends StructureConstructor {
-  constructor(classNames) {
-    super(classNames);
-  }
-
-  createA(inner, id) {
-    let a = document.createElement("a");
-    a.className = this.classNames.a;
-    a.setAttribute("href", "#")
-    a.id = id;
-    a.innerHTML = inner;
-    return a
-  }
-  createSpan(inner, id) {
-    let span = document.createElement("span");
-    span.className = this.classNames.span;
-    span.id = id;
-    span.innerHTML = inner;
-    return span
-  }
-  outputUl() {
-    let outputUl = this.createUl();
-    outputUl.id = "filter";
-    let li = this.createLi("");
-    let li1 = this.createLi("");
-    let li2 = this.createLi("");
-    let a = this.createA("Movies", "movie");
-    let a1 = this.createA("TV shows", "tv");
-    let a2 = this.createA("Person", "person");
-    let span = this.createSpan("", "movie-number");
-    let span1 = this.createSpan("", "tv-number");
-    let span2 = this.createSpan("", "person-number");
-    a.appendChild(span);
-    a1.appendChild(span1);
-    a2.appendChild(span2);
-    li.appendChild(a);
-    li1.appendChild(a1);
-    li2.appendChild(a2);
-    outputUl.appendChild(li);
-    outputUl.appendChild(li1);
-    outputUl.appendChild(li2);
-    return outputUl;
-  }
-}
-
-// Класс для создания карточек  upcoming и rated  фильмов, тв шоу
+// Class for creating movie/tv cards based on criteria (upcoming and top rated)
 class UpcomingConstructor extends StructureConstructor {
   constructor(classNames, poster, title) {
     super(classNames);
@@ -173,7 +128,7 @@ class UpcomingConstructor extends StructureConstructor {
   }
 }
 
-// Класс для создания карточек  списков фильмов
+// Class for creating movie list cards
 class ListConstructor extends StructureConstructor {
   constructor(classNames, name, poster) {
     super(classNames);
@@ -198,7 +153,7 @@ class ListConstructor extends StructureConstructor {
   }
 }
 
-// Класс для создания карточек  фильмов и тв шоу
+// Class for creating movie/tv cards
 class CardsConstructor extends StructureConstructor {
   constructor(classNames, poster, name, title, vote, releaseDate, airDate, overview) {
     super(classNames);
@@ -213,7 +168,6 @@ class CardsConstructor extends StructureConstructor {
 
   getImagePath() {
     let image = `https://image.tmdb.org/t/p/w200${this.poster}`;
-
     if (this.poster == null || this.poster == undefined || this.poster == NaN) {
       image = `images/pop.png`;
     }
@@ -241,7 +195,7 @@ class CardsConstructor extends StructureConstructor {
 
     let inner = "Hey! It`looks like we don`t know the exact date. Can you help us?";
     if (date.valid()) {
-      inner = `${monthNames[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`
+      inner = `${MONTH_NAMES[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`
     }
     return inner;
   }
@@ -268,7 +222,7 @@ class CardsConstructor extends StructureConstructor {
   }
 }
 
-// Класс для создания карточек  людей
+// Class for creating person cards
 class PersonCardConstructor extends StructureConstructor {
   constructor(classNames, profile, name, popularity, knownFor) {
     super(classNames);
@@ -280,7 +234,6 @@ class PersonCardConstructor extends StructureConstructor {
 
   getImagePath() {
     let image = `https://image.tmdb.org/t/p/w200${this.profile}`;
-
     if (this.profile == null || this.profile == undefined || this.profile == NaN) {
       image = `images/no_photo.jpg`;
     }
@@ -316,7 +269,44 @@ class PersonCardConstructor extends StructureConstructor {
   }
 }
 
-// Функция рандомного выбора
+// Class for creating filtered search results
+class DataFilter {
+  constructor(data) {
+    this.movieNumber = data.filter(x => x.media_type == "movie");
+    this.tvNumber = data.filter(x => x.media_type == "tv");
+    this.personNumber = data.filter(x => x.media_type == "person");
+  }
+  getMovieCards() {
+    if (this.movieCards == undefined) {
+      this.movieCards = [];
+      this.movieNumber.forEach(x => {
+        this.movieCards.push(new CardsConstructor(CARD_CLASSNAMES, x.poster_path, x.name, x.title, x.vote_average, x.release_date, x.first_air_date, x.overview))
+      });
+    }
+    return this.movieCards;
+  }
+  getTvCards() {
+    if (this.tvCards == undefined) {
+      this.tvCards = [];
+      this.tvNumber.forEach(x => {
+        this.tvCards.push(new CardsConstructor(CARD_CLASSNAMES, x.poster_path, x.name, x.title, x.vote_average, x.release_date, x.first_air_date, x.overview))
+      });
+    }
+    return this.tvCards;
+  }
+  getPersonCards() {
+    if (this.personCards == undefined) {
+      this.personCards = [];
+      this.personNumber.forEach(x => {
+        this.personCards.push(new PersonCardConstructor(CARD_CLASSNAMES, x.profile_path, x.name, x.popularity, x.known_for))
+      });
+    }
+    return this.personCards;
+  }
+}
+
+
+// Function for random choice
 let getRandomArr = (arr, arrLength, min) => {
   let outputArr = [];
 
@@ -343,41 +333,38 @@ let getRandomArrNum = (outputArr, i, arr, arrLength, min) => {
   return outputArr;
 }
 
-let arrList = [3, 28, 3945, 2469, 932, 3681, 43, 338, 3321, 1131, 3682, 1];
-let randArrList = getRandomArr(arrList, 3, 0);
-let listId;
-
-// Запрос на отображение самых рейтинговых тв шоу
+// Get request for top rated tv shows
 axios.get("https://api.themoviedb.org/3/tv/top_rated?api_key=a4d66e0eba55fbd6378c9d51a9483aa3&language=en-US&page=1")
   .then(response => {
     let data = getRandomArr(response.data.results, 6, 0);
     data.forEach(x => {
-      let blockTvTopRated = new UpcomingConstructor(ratedClassNames, x.poster_path, x.name);
+      let blockTvTopRated = new UpcomingConstructor(RATED_CLASSNAMES, x.poster_path, x.name);
       mainSection.appendChild(blockTvTopRated.outputDiv());
     })
   })
 
-// Запрос на отображение upcoming фильмов
+// Get request for upcoming movies
 axios.get("https://api.themoviedb.org/3/movie/upcoming?api_key=a4d66e0eba55fbd6378c9d51a9483aa3&language=en-US&page=1&region=US")
   .then(response => {
     let data = getRandomArr(response.data.results, 3, 0);
     data.forEach(x => {
-      let blockUpcoming = new UpcomingConstructor(asideClassNames, x.poster_path, x.title)
+      let blockUpcoming = new UpcomingConstructor(ASIDE_CLASSNAMES, x.poster_path, x.title)
       aside.appendChild(blockUpcoming.outputDiv());
     })
   })
 
-// Запрос на отображение пользовательских списков фильмов
+// Get request for users` movie lists
+let randArrList = getRandomArr(arrList, 3, 0);
 randArrList.forEach(x => {
-  listId = x;
+  let listId = x;
   axios.get(`https://api.themoviedb.org/3/list/${listId}?api_key=a4d66e0eba55fbd6378c9d51a9483aa3&language=en-US`)
     .then(response => {
-      let blockList = new ListConstructor(listClassNames, response.data.name, response.data.poster_path)
+      let blockList = new ListConstructor(LIST_CLASSNAMES, response.data.name, response.data.poster_path)
       mainBottom.appendChild(blockList.outputDiv());
     })
 })
 
-// Функция применения кастомных стилей после получения результатов поиска
+// Function for apllying custom styles after search done
 let applyCustomStylesAfterSearch = () => {
   aside.style.display = "none";
   mainSection.style.width = "100%";
@@ -391,89 +378,54 @@ let applyCustomStylesAfterSearch = () => {
   main.style.flexDirection = "row-reverse";
 }
 
-let filter = new FilterConstructor(filterClassNames);
-main.appendChild(filter.outputUl());
-
-const movie = document.getElementById("movie");
-const tv = document.getElementById("tv");
-const person = document.getElementById("person");
-
-const movieNumber = document.getElementById("movie-number");
-const tvNumber = document.getElementById("tv-number");
-const personNumber = document.getElementById("person-number");
-
-document.getElementById("filter").style.display = "none";
-
-
-let resetFilter = () => {
+// Function for reset styles for filter
+let resetFilter = (button) => {
   movie.style.borderBottom = "1px solid transparent";
   tv.style.borderBottom = "1px solid transparent";
   person.style.borderBottom = "1px solid transparent";
+  mainSection.innerHTML = '';
+  button.style.borderBottom = "1px solid green";
 }
 
-// Поиск фильмов и tv шоу
+// Function for counting search results
+let populateCounters = (dataFilter) => {
+  movieNumber.innerHTML = ` (${dataFilter.movieNumber.length})`;
+  tvNumber.innerHTML = ` (${dataFilter.tvNumber.length})`;
+  personNumber.innerHTML = ` (${dataFilter.personNumber.length})`;
+}
+
+// Get request for multiple search
 document.getElementById('submit').onclick = () => {
-  let term = document.getElementById("search").value;
+  let term = search.value;
   applyCustomStylesAfterSearch();
-
-  class DataFilter {
-    constructor(data) {
-      this.data = data;
-      this.movieNumber = data.filter(x => x.media_type == "movie");
-      this.tvNumber = data.filter(x => x.media_type == "tv");
-      this.personNumber = data.filter(x => x.media_type == "person");
-    }
-  }
-
-  let populateCounters = (dataFilter) => {
-    movieNumber.innerHTML = ` (${dataFilter.movieNumber.length})`;
-    tvNumber.innerHTML = ` (${dataFilter.tvNumber.length})`;
-    personNumber.innerHTML = ` (${dataFilter.personNumber.length})`;
-
-  }
-
   axios.get(`https://api.themoviedb.org/3/search/multi?api_key=a4d66e0eba55fbd6378c9d51a9483aa3&query=${term}`)
     .then(response => {
       document.getElementById("filter").style.display = "block";
-      let data = response.data.results;
-      let dataFilter = new DataFilter(data);
+      let dataFilter = new DataFilter(response.data.results);
       populateCounters(dataFilter);
-
-      resetFilter();
-      movie.style.borderBottom = "1px solid green";
-      dataFilter.movieNumber.forEach(x => {
-        let blockSearch = new CardsConstructor(cardClassNames, x.poster_path, x.name, x.title, x.vote_average, x.release_date, x.first_air_date, x.overview)
-        mainSection.appendChild(blockSearch.outputDiv());
+      resetFilter(movie);
+      dataFilter.getMovieCards().forEach(x => {
+        mainSection.appendChild(x.outputDiv());
       })
 
-
       movie.onclick = () => {
-        resetFilter();
-        movie.style.borderBottom = "1px solid green";
-        mainSection.innerHTML = '';
-        dataFilter.movieNumber.forEach(x => {
-          let blockSearch = new CardsConstructor(cardClassNames, x.poster_path, x.name, x.title, x.vote_average, x.release_date, x.first_air_date, x.overview)
-          mainSection.appendChild(blockSearch.outputDiv());
+        resetFilter(movie);
+        dataFilter.getMovieCards().forEach(x => {
+          mainSection.appendChild(x.outputDiv());
         })
       }
 
       tv.onclick = () => {
-        resetFilter();
-        tv.style.borderBottom = "1px solid green";
-        mainSection.innerHTML = '';
-        dataFilter.tvNumber.forEach(x => {
-          let blockSearch = new CardsConstructor(cardClassNames, x.poster_path, x.name, x.title, x.vote_average, x.release_date, x.first_air_date, x.overview)
-          mainSection.appendChild(blockSearch.outputDiv());
+        resetFilter(tv);
+        dataFilter.getTvCards().forEach(x => {
+          mainSection.appendChild(x.outputDiv());
         })
       }
 
       person.onclick = () => {
-        resetFilter();
-        person.style.borderBottom = "1px solid green";
-        mainSection.innerHTML = '';
-        dataFilter.personNumber.forEach(x => {
-          let blockSearch = new PersonCardConstructor(cardClassNames, x.profile_path, x.name, x.popularity, x.known_for)
-          mainSection.appendChild(blockSearch.outputDiv());
+        resetFilter(person);
+        dataFilter.getPersonCards().forEach(x => {
+          mainSection.appendChild(x.outputDiv());
         })
       }
     })

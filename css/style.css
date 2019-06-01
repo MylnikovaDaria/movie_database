@@ -211,7 +211,7 @@ body {
   color: #9ba8b7;
 }
 
-.header-block__input_search:focus {
+.header-block__input_search:focus, .header-block__input_search {
   font-size: 14px;
   font-style: italic;
   color: #9ba8b7;
@@ -485,7 +485,7 @@ body {
   margin-top: 20px;
 }
 
-.main-section__ul {
+#filter {
   margin-left: 7%;
   width: 15%;
   margin-bottom: 50px;
@@ -497,13 +497,14 @@ body {
   -webkit-box-direction: normal;
   -ms-flex-direction: column;
   flex-direction: column;
+  display: none;
 }
 
-.main-section__ul__li {
+.main-ul__li {
   margin-bottom: 15px;
 }
 
-.main-section__ul__li__a {
+.main-ul__li__a {
   text-decoration: none;
   font-family: "Dosis", sans-serif;
   font-size: 20px;
@@ -516,10 +517,10 @@ body {
   border-bottom: 1px solid transparent;
 }
 
-.main-section__ul__li__a:hover {
+.main-ul__li__a:hover {
   color: #6bd379;
 }
 
-.main-section__ul__li__a_span {
+.main-ul__li__a_span {
   color: #d53a41;
 }
